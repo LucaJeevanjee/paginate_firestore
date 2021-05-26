@@ -29,7 +29,7 @@ class PaginateFirestore extends StatefulWidget {
     this.onReachedEnd,
     this.onLoaded,
     this.emptyDisplay = const EmptyDisplay(),
-    this.separator = const EmptySeparator(),
+    this.separator,
     this.initialLoader = const InitialLoader(),
     this.bottomLoader = const BottomLoader(),
     this.shrinkWrap = false,
@@ -42,6 +42,7 @@ class PaginateFirestore extends StatefulWidget {
     this.header,
     this.footer,
     this.isLive = false,
+    this.isChat = false,
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -57,9 +58,9 @@ class PaginateFirestore extends StatefulWidget {
   final bool reverse;
   final ScrollController? scrollController;
   final Axis scrollDirection;
-  final Widget separator;
   final bool shrinkWrap;
   final bool isLive;
+  final bool isChat;
   final DocumentSnapshot? startAfterDocument;
   final Widget? header;
   final Widget? footer;
@@ -70,6 +71,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget Function(Exception)? onError;
 
   final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
+  final Widget Function(int, BuildContext, DocumentSnapshot) separator;
 
   final void Function(PaginationLoaded)? onReachedEnd;
 
@@ -215,7 +217,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
                   return widget.itemBuilder(itemIndex, context,
                       loadedState.documentSnapshots[itemIndex]);
                 }
-                return widget.separator;
+                return widget.separator(itemIndex, context, loadedState.documentSnapshots[itemIndex]);
               },
               semanticIndexCallback: (widget, localIndex) {
                 if (localIndex.isEven) {
